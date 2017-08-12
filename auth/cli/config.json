@@ -1,0 +1,11 @@
+{
+    "version": "v1",
+
+    "network_address": ":9001",
+
+    "token_expiry": 3600,
+
+    "redis_network_address": ":6379",
+    "redis_max_idle": 3,
+    "redis_idle_timeout": 240
+}

@@ -1,0 +1,33 @@
+{
+    "version": "v1",
+
+    "network_address": ":9003",
+
+    "redis_max_idle": 3,
+    "redis_idle_timeout": 240,
+    "redis_network_address": ":6381",
+
+    "auth_verifier_url": "http://127.0.0.1:9001/v1/rpc/token/verify",
+    "auth_verifier_method": "Validator.ValidateAccessToken",
+
+    "data_verifier_url": "http://127.0.0.1:9002/v1/rpc/data/validate",
+    "song_verifier_method": "Validator.ValidateSong",
+    "user_verifier_method": "Validator.ValidateUser",
+    "album_verifier_method": "Validator.ValidateAlbum",
+    "artist_verifier_method": "Validator.ValidateArtist",
+    "playlist_verifier_method": "Validator.ValidatePlaylist",
+    
+    "file_form_key": "file",
+    "image_size_limit": 5242880,
+    "audio_size_limit": 7340032, 
+    "multipart_max_mem": 33554432, 
+
+    "user_dir":     "./file/user",
+    "song_dir":     "./file/song",
+    "album_dir":    "./file/album",
+    "artist_dir":   "./file/artist",
+    "playlist_dir": "./file/playlist",
+
+    "valid_image_extensions": [".jpeg", ".jpg", ".png"],
+    "valid_audio_extensions": [".mp3"]
+}
