@@ -1,7 +1,7 @@
 {
     "version": "v1",
 
-    "network_address": ":9001",
+    "network_address": ":9002",
 
     "redis_network_address": ":6380",
     "redis_max_idle": 3,
