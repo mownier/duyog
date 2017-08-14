@@ -1,10 +1,11 @@
 package rds
 
 import (
+	"time"
+
 	"github.com/mownier/duyog/auth/store"
 	"github.com/mownier/duyog/generator"
 	"github.com/mownier/duyog/progerr"
-	"time"
 
 	"github.com/garyburd/redigo/redis"
 )
@@ -87,9 +88,15 @@ func (r clientRepo) GetByKey(k string) (store.Client, error) {
 	conn := r.pool.Get()
 	defer conn.Close()
 
-	err := r.getByKey(k, conn, &client)
+	tmp, err := r.getByKey(k, conn)
 
-	return client, err
+	if err != nil {
+		return client, err
+	}
+
+	client = tmp
+
+	return client, nil
 }
 
 func (r clientRepo) GetByAPIKey(k string) (store.Client, error) {
@@ -101,30 +108,72 @@ func (r clientRepo) GetBySecretToken(t string) (store.Client, error) {
 }
 
 func (r clientRepo) GetByAccessToken(t string) (store.Client, error) {
-	return r.getByToken(t, "access_token")
+	var client store.Client
+
+	if t == "" {
+		return client, progerr.TokenInvalidAccess
+	}
+
+	conn := r.pool.Get()
+	defer conn.Close()
+
+	data, err := conn.Do("GET", "access:"+t+":token")
+
+	if err != nil {
+		return client, progerr.TokenInvalidAccess
+	}
+
+	if len(data.([]byte)) == 0 {
+		return client, progerr.TokenInvalidAccess
+	}
+
+	tokenKey := string(data.([]byte)[:])
+
+	data, err = conn.Do("GET", "token:"+tokenKey+":client")
+
+	if err != nil {
+		return client, progerr.TokenInvalidAccess
+	}
+
+	if len(data.([]byte)) == 0 {
+		return client, progerr.TokenInvalidAccess
+	}
+
+	clientKey := string(data.([]byte)[:])
+	tmp, err := r.getByKey(clientKey, conn)
+
+	if err != nil {
+		return client, progerr.TokenInvalidAccess
+	}
+
+	client = tmp
+
+	return client, nil
 }
 
-func (r clientRepo) getByKey(k string, conn redis.Conn, client *store.Client) error {
+func (r clientRepo) getByKey(k string, conn redis.Conn) (store.Client, error) {
+	var client store.Client
+
 	if k == "" {
-		return progerr.ClientInvalidKey
+		return client, progerr.ClientInvalidKey
 	}
 
 	data, err := redis.Values(conn.Do("HGETALL", "client:"+k))
 
 	if err != nil {
-		return progerr.Internal(err)
+		return client, progerr.Internal(err)
 	}
 
 	c := store.Client{}
 	err = redis.ScanStruct(data, &c)
 
 	if err != nil {
-		return progerr.Internal(err)
+		return client, progerr.Internal(err)
 	}
 
-	client = &c
+	client = c
 
-	return nil
+	return client, nil
 }
 
 func (r clientRepo) getByToken(t string, name string) (store.Client, error) {
@@ -148,9 +197,15 @@ func (r clientRepo) getByToken(t string, name string) (store.Client, error) {
 	}
 
 	key := string(data.([]byte)[:])
-	err = r.getByKey(key, conn, &client)
+	tmp, err := r.getByKey(key, conn)
 
-	return client, err
+	if err != nil {
+		return client, err
+	}
+
+	client = tmp
+
+	return client, nil
 }
 
 // ClientRepo method
