@@ -7,15 +7,15 @@
     "redis_idle_timeout": 240,
     "redis_network_address": ":6381",
 
-    "auth_verifier_url": "http://127.0.0.1:9001/v1/rpc/token/verify",
-    "auth_verifier_method": "Validator.ValidateAccessToken",
+    "auth_verifier_url": "http://127.0.0.1:9001/v1/auth/verify",
+    "auth_verifier_method": "Verifier.ValidateAccessToken",
 
-    "data_verifier_url": "http://127.0.0.1:9002/v1/rpc/data/validate",
-    "song_verifier_method": "Validator.ValidateSong",
-    "user_verifier_method": "Validator.ValidateUser",
-    "album_verifier_method": "Validator.ValidateAlbum",
-    "artist_verifier_method": "Validator.ValidateArtist",
-    "playlist_verifier_method": "Validator.ValidatePlaylist",
+    "data_verifier_url": "http://127.0.0.1:9002/v1/data/verify",
+    "song_verifier_method": "Verifier.ValidateSong",
+    "user_verifier_method": "Verifier.ValidateUser",
+    "album_verifier_method": "Verifier.ValidateAlbum",
+    "artist_verifier_method": "Verifier.ValidateArtist",
+    "playlist_verifier_method": "Verifier.ValidatePlaylist",
     
     "file_form_key": "file",
     "image_size_limit": 5242880,
