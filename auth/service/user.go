@@ -1,10 +1,11 @@
 package service
 
 import (
-	"github.com/mownier/duyog/auth/store"
-	"github.com/mownier/duyog/progerr"
 	"encoding/json"
 	"net/http"
+
+	"github.com/mownier/duyog/auth/store"
+	"github.com/mownier/duyog/progerr"
 )
 
 // User interface
@@ -38,17 +39,15 @@ func (u user) SignUp() ResourceHandler     { return u.signUp }
 func (u user) ChangePass() ResourceHandler { return u.changePass }
 
 func (u user) signIn(w http.ResponseWriter, r *http.Request) {
-	authenticate(w, r, u.Resource, pathCodeUserSignIn, u.clientRepo, u.tokenRepo, u.tokenExpiry,
-		func(user store.User) (store.User, error) {
-			return store.ValidateUserCredential(u.userRepo, user)
-		})
+	authenticate(w, r, u.Resource, pathCodeUserSignIn, u.clientRepo, u.tokenRepo, u.tokenExpiry, func(user store.User) (store.User, error) {
+		return store.ValidateUserCredential(u.userRepo, user)
+	})
 }
 
 func (u user) signUp(w http.ResponseWriter, r *http.Request) {
-	authenticate(w, r, u.Resource, pathCodeUserSignUp, u.clientRepo, u.tokenRepo, u.tokenExpiry,
-		func(user store.User) (store.User, error) {
-			return store.CreateUser(u.userRepo, user)
-		})
+	authenticate(w, r, u.Resource, pathCodeUserSignUp, u.clientRepo, u.tokenRepo, u.tokenExpiry, func(user store.User) (store.User, error) {
+		return store.CreateUser(u.userRepo, user)
+	})
 }
 
 func (u user) changePass(w http.ResponseWriter, r *http.Request) {
