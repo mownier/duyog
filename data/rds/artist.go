@@ -1,10 +1,11 @@
 package rds
 
 import (
+	"time"
+
 	"github.com/mownier/duyog/data/store"
 	"github.com/mownier/duyog/generator"
 	"github.com/mownier/duyog/progerr"
-	"time"
 
 	"github.com/garyburd/redigo/redis"
 )
@@ -82,7 +83,7 @@ func (r artistRepo) Update(a store.Artist) (store.Artist, error) {
 		Key: a.Key,
 	}
 
-	if a.Bio == "" && a.Bio != ar.Bio {
+	if a.Bio != "" && a.Bio != ar.Bio {
 		_, err = conn.Do("HSET", "artist:"+a.Key, "bio", a.Bio)
 
 		if err == nil {
@@ -90,7 +91,7 @@ func (r artistRepo) Update(a store.Artist) (store.Artist, error) {
 		}
 	}
 
-	if a.Avatar == "" && a.Avatar != ar.Avatar {
+	if a.Avatar != "" && a.Avatar != ar.Avatar {
 		_, err = conn.Do("HSET", "artist:"+a.Key, "avatar", a.Avatar)
 
 		if err == nil {
@@ -98,7 +99,7 @@ func (r artistRepo) Update(a store.Artist) (store.Artist, error) {
 		}
 	}
 
-	if a.Genre == "" && a.Genre != ar.Genre {
+	if a.Genre != "" && a.Genre != ar.Genre {
 		_, err = conn.Do("HSET", "artist:"+a.Key, "genre", a.Genre)
 
 		if err == nil {
@@ -106,7 +107,7 @@ func (r artistRepo) Update(a store.Artist) (store.Artist, error) {
 		}
 	}
 
-	if a.Name == "" && a.Name != ar.Name {
+	if a.Name != "" && a.Name != ar.Name {
 		_, err = conn.Do("HSET", "artist:"+a.Key, "name", a.Name)
 
 		if err == nil {
@@ -209,7 +210,7 @@ func (r artistRepo) GetSongs(k store.ArtistKey) (store.Songs, error) {
 }
 
 func (r artistRepo) GetAlbums(k store.ArtistKey) (store.Albums, error) {
-	var albums store.Albums
+	albums := store.Albums{}
 
 	if k == "" {
 		return albums, progerr.ArtistInvalidKey
@@ -227,8 +228,6 @@ func (r artistRepo) GetAlbums(k store.ArtistKey) (store.Albums, error) {
 	if len(data) == 0 {
 		return albums, progerr.ArtistHasNoAlbums
 	}
-
-	var tmp store.Albums
 
 	for _, v := range data {
 		if len(v.([]byte)) == 0 {
@@ -254,10 +253,10 @@ func (r artistRepo) GetAlbums(k store.ArtistKey) (store.Albums, error) {
 			continue
 		}
 
-		tmp[key] = album
+		albums[key] = album
 	}
 
-	if len(tmp) == 0 {
+	if len(albums) == 0 {
 		return albums, progerr.ArtistHasNoAlbums
 	}
 

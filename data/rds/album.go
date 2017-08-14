@@ -1,10 +1,11 @@
 package rds
 
 import (
+	"time"
+
 	"github.com/mownier/duyog/data/store"
 	"github.com/mownier/duyog/generator"
 	"github.com/mownier/duyog/progerr"
-	"time"
 
 	"github.com/garyburd/redigo/redis"
 )
@@ -90,7 +91,7 @@ func (r albumRepo) Update(a store.Album) (store.Album, error) {
 		}
 	}
 
-	if a.Photo == "" && a.Photo != al.Photo {
+	if a.Photo != "" && a.Photo != al.Photo {
 		_, err = conn.Do("HSET", "album:"+a.Key, "photo", a.Photo)
 
 		if err == nil {
@@ -98,7 +99,7 @@ func (r albumRepo) Update(a store.Album) (store.Album, error) {
 		}
 	}
 
-	if a.Title == "" && a.Title != al.Title {
+	if a.Title != "" && a.Title != al.Title {
 		_, err := conn.Do("HSET", "album:"+a.Key, "title", a.Title)
 
 		if err == nil {
@@ -106,7 +107,7 @@ func (r albumRepo) Update(a store.Album) (store.Album, error) {
 		}
 	}
 
-	if a.Desc == "" && a.Desc != al.Desc {
+	if a.Desc != "" && a.Desc != al.Desc {
 		_, err = conn.Do("HSET", "artist:"+a.Key, "description", a.Desc)
 
 		if err == nil {
@@ -207,7 +208,7 @@ func (r albumRepo) GetSongs(k store.AlbumKey) (store.Songs, error) {
 }
 
 func (r albumRepo) GetArtists(k store.AlbumKey) (store.Artists, error) {
-	var artists store.Artists
+	artists := store.Artists{}
 
 	if k == "" {
 		return artists, progerr.AlbumInvalidKey
@@ -225,8 +226,6 @@ func (r albumRepo) GetArtists(k store.AlbumKey) (store.Artists, error) {
 	if len(data) == 0 {
 		return artists, progerr.AlbumHasNoArtists
 	}
-
-	var tmp store.Artists
 
 	for _, v := range data {
 		if len(v.([]byte)) == 0 {
@@ -252,14 +251,12 @@ func (r albumRepo) GetArtists(k store.AlbumKey) (store.Artists, error) {
 			continue
 		}
 
-		tmp[key] = artist
+		artists[key] = artist
 	}
 
-	if len(tmp) == 0 {
+	if len(artists) == 0 {
 		return artists, progerr.AlbumHasNoArtists
 	}
-
-	artists = tmp
 
 	return artists, nil
 }
