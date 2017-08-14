@@ -7,6 +7,6 @@
     "redis_max_idle": 3,
     "redis_idle_timeout": 240,
 
-    "auth_verifier_url": "http://127.0.0.1:9001/v1/rpc/token/verify",
-    "auth_verifier_method": "Validator.ValidateAccessToken"
+    "auth_verifier_url": "http://127.0.0.1:9001/v1/auth/verify",
+    "auth_verifier_method": "Verifier.ValidateAccessToken"
 }
