@@ -6,8 +6,8 @@ import (
 	"github.com/garyburd/redigo/redis"
 )
 
-func getSongs(keys []store.SongKey, conn redis.Conn, e error) (songs store.Songs, err error) {
-	var tmp store.Songs
+func getSongs(keys []store.SongKey, conn redis.Conn, e error) (store.Songs, error) {
+	songs := store.NewSongs()
 
 	for _, key := range keys {
 		data, err := redis.Values(conn.Do("HGETALL", "song:"+key))
@@ -29,7 +29,7 @@ func getSongs(keys []store.SongKey, conn redis.Conn, e error) (songs store.Songs
 			continue
 		}
 
-		tmp.ArtistKeys[key] = []store.ArtistKey{}
+		songs.ArtistKeys[key] = []store.ArtistKey{}
 
 		for _, v := range data {
 			if len(v.([]byte)) == 0 {
@@ -50,22 +50,22 @@ func getSongs(keys []store.SongKey, conn redis.Conn, e error) (songs store.Songs
 				continue
 			}
 
-			tmp.ArtistKeys[key] = append(tmp.ArtistKeys[key], artistKey)
-			tmp.Artists[artistKey] = artist
+			songs.ArtistKeys[key] = append(songs.ArtistKeys[key], artistKey)
+			songs.Artists[artistKey] = artist
 		}
 
-		if len(tmp.ArtistKeys[key]) == 0 {
+		if len(songs.ArtistKeys[key]) == 0 {
 			continue
 		}
 
-		tmp.Songs[key] = song
+		songs.Songs[key] = song
 		data, err = redis.Values(conn.Do("SMEMBERS", "song:"+key+":albums"))
 
 		if err != nil || len(data) == 0 {
 			continue
 		}
 
-		tmp.AlbumKeys[key] = []store.AlbumKey{}
+		songs.AlbumKeys[key] = []store.AlbumKey{}
 
 		for _, v := range data {
 			if len(v.([]byte)) == 0 {
@@ -73,7 +73,7 @@ func getSongs(keys []store.SongKey, conn redis.Conn, e error) (songs store.Songs
 			}
 
 			albumKey := store.AlbumKey(v.([]byte)[:])
-			data, err := redis.Values(conn.Do("HGETALL", "artist:"+albumKey))
+			data, err := redis.Values(conn.Do("HGETALL", "album:"+albumKey))
 
 			if err != nil || len(data) == 0 {
 				continue
@@ -86,16 +86,14 @@ func getSongs(keys []store.SongKey, conn redis.Conn, e error) (songs store.Songs
 				continue
 			}
 
-			tmp.AlbumKeys[key] = append(tmp.AlbumKeys[key], albumKey)
-			tmp.Albums[albumKey] = album
+			songs.AlbumKeys[key] = append(songs.AlbumKeys[key], albumKey)
+			songs.Albums[albumKey] = album
 		}
 	}
 
-	if len(tmp.Songs) == 0 {
+	if len(songs.Songs) == 0 {
 		return songs, e
 	}
-
-	songs = tmp
 
 	return songs, nil
 }
