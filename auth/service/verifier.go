@@ -1,35 +1,31 @@
 package service
 
 import (
+	"net/http"
+
 	"github.com/mownier/duyog/auth/store"
 	"github.com/mownier/duyog/logger"
 	"github.com/mownier/duyog/progerr"
 	"github.com/mownier/duyog/validator"
-	"net/http"
 
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/rpc/v2/json2"
 )
 
-// Validator interface
-type Validator interface {
-	ValidateAccessToken() RPCHandler
+// Verifier interface
+type Verifier interface {
+	ValidateAccessToken(*http.Request, *validator.AuthArgs, *validator.AuthReply) error
 }
 
-// ValidateAccessToken method
-func ValidateAccessToken(v Validator) RPCHandler { return v.ValidateAccessToken() }
-
-type authValidator struct {
+type verifier struct {
 	userRepo   store.UserRepo
 	clientRepo store.ClientRepo
 
 	log logger.Request
 }
 
-func (a authValidator) ValidateAccessToken() RPCHandler { return a.validateAccessToken }
-
-func (a authValidator) validateAccessToken(r *http.Request, args *validator.AuthArgs, rep *validator.AuthReply) error {
-	logger.LogRequest(a.log, r)
+func (v verifier) ValidateAccessToken(r *http.Request, args *validator.AuthArgs, rep *validator.AuthReply) error {
+	logger.LogRequest(v.log, r)
 
 	if r.Method != http.MethodPost {
 		return &json2.Error{
@@ -52,7 +48,7 @@ func (a authValidator) validateAccessToken(r *http.Request, args *validator.Auth
 		}
 	}
 
-	client, err := store.GetClientByAccessToken(a.clientRepo, string(args.AccessToken))
+	client, err := store.GetClientByAccessToken(v.clientRepo, string(args.AccessToken))
 
 	if err != nil {
 		return &json2.Error{
@@ -74,7 +70,7 @@ func (a authValidator) validateAccessToken(r *http.Request, args *validator.Auth
 		}
 	}
 
-	user, err := store.GetUserByKey(a.userRepo, claims.UserKey)
+	user, err := store.GetUserByKey(v.userRepo, claims.UserKey)
 
 	if err != nil {
 		return &json2.Error{
@@ -97,9 +93,9 @@ func (a authValidator) validateAccessToken(r *http.Request, args *validator.Auth
 	return nil
 }
 
-// AuthValidator method
-func AuthValidator(u store.UserRepo, c store.ClientRepo, l logger.Request) Validator {
-	return authValidator{
+// NewVerifier method
+func NewVerifier(u store.UserRepo, c store.ClientRepo, l logger.Request) Verifier {
+	return verifier{
 		userRepo:   u,
 		clientRepo: c,
 
