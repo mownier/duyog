@@ -1,7 +1,7 @@
 package validator
 
 import (
-	"duyog/progerr"
+	"github.com/mownier/duyog/progerr"
 	"net/http"
 	"strings"
 )

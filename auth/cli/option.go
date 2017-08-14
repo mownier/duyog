@@ -1,7 +1,7 @@
 package main
 
 import (
-	"duyog/auth/store"
+	"github.com/mownier/duyog/auth/store"
 	"errors"
 	"fmt"
 	"net"

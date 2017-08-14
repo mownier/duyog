@@ -1,13 +1,13 @@
 package main
 
 import (
-	"duyog/extractor"
-	"duyog/generator"
-	"duyog/logger"
-	"duyog/storage/rds"
-	"duyog/storage/service"
-	"duyog/validator"
-	"duyog/writer"
+	"github.com/mownier/duyog/extractor"
+	"github.com/mownier/duyog/generator"
+	"github.com/mownier/duyog/logger"
+	"github.com/mownier/duyog/storage/rds"
+	"github.com/mownier/duyog/storage/service"
+	"github.com/mownier/duyog/validator"
+	"github.com/mownier/duyog/writer"
 
 	"encoding/json"
 	"flag"

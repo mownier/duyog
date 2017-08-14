@@ -2,7 +2,7 @@ package validator
 
 import (
 	"bytes"
-	"duyog/progerr"
+	"github.com/mownier/duyog/progerr"
 	"net/http"
 
 	"github.com/gorilla/rpc/v2/json2"

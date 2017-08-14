@@ -1,8 +1,8 @@
 package service
 
 import (
-	"duyog/progerr"
-	"duyog/storage/store"
+	"github.com/mownier/duyog/progerr"
+	"github.com/mownier/duyog/storage/store"
 
 	"net/http"
 )

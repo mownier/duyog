@@ -1,10 +1,10 @@
 package main
 
 import (
-	"duyog/auth/rds"
-	"duyog/auth/store"
-	"duyog/generator"
-	"duyog/loader"
+	"github.com/mownier/duyog/auth/rds"
+	"github.com/mownier/duyog/auth/store"
+	"github.com/mownier/duyog/generator"
+	"github.com/mownier/duyog/loader"
 	"flag"
 	"fmt"
 	"os"

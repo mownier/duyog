@@ -1,7 +1,7 @@
 package extractor
 
 import (
-	"duyog/validator"
+	"github.com/mownier/duyog/validator"
 	"strings"
 )
 

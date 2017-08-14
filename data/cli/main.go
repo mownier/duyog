@@ -1,13 +1,13 @@
 package main
 
 import (
-	"duyog/data/rds"
-	"duyog/data/service"
-	"duyog/extractor"
-	"duyog/generator"
-	"duyog/logger"
-	"duyog/validator"
-	"duyog/writer"
+	"github.com/mownier/duyog/data/rds"
+	"github.com/mownier/duyog/data/service"
+	"github.com/mownier/duyog/extractor"
+	"github.com/mownier/duyog/generator"
+	"github.com/mownier/duyog/logger"
+	"github.com/mownier/duyog/validator"
+	"github.com/mownier/duyog/writer"
 	"fmt"
 	"log"
 	"net/http"

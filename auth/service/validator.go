@@ -1,10 +1,10 @@
 package service
 
 import (
-	"duyog/auth/store"
-	"duyog/logger"
-	"duyog/progerr"
-	"duyog/validator"
+	"github.com/mownier/duyog/auth/store"
+	"github.com/mownier/duyog/logger"
+	"github.com/mownier/duyog/progerr"
+	"github.com/mownier/duyog/validator"
 	"net/http"
 
 	jwt "github.com/dgrijalva/jwt-go"

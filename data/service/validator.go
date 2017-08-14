@@ -1,10 +1,10 @@
 package service
 
 import (
-	"duyog/data/store"
-	"duyog/logger"
-	"duyog/progerr"
-	"duyog/validator"
+	"github.com/mownier/duyog/data/store"
+	"github.com/mownier/duyog/logger"
+	"github.com/mownier/duyog/progerr"
+	"github.com/mownier/duyog/validator"
 	"net/http"
 
 	"github.com/gorilla/rpc/v2/json2"

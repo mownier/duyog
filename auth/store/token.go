@@ -1,6 +1,6 @@
 package store
 
-import "duyog/generator"
+import "github.com/mownier/duyog/generator"
 
 // TokenRepo interface
 type TokenRepo interface {

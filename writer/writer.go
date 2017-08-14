@@ -1,7 +1,7 @@
 package writer
 
 import (
-	"duyog/logger"
+	"github.com/mownier/duyog/logger"
 	"net/http"
 )
 

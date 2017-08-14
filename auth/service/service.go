@@ -1,11 +1,11 @@
 package service
 
 import (
-	"duyog/auth/store"
-	"duyog/generator"
-	"duyog/progerr"
-	"duyog/validator"
-	"duyog/writer"
+	"github.com/mownier/duyog/auth/store"
+	"github.com/mownier/duyog/generator"
+	"github.com/mownier/duyog/progerr"
+	"github.com/mownier/duyog/validator"
+	"github.com/mownier/duyog/writer"
 	"encoding/json"
 	"net/http"
 

@@ -1,11 +1,11 @@
 package main
 
 import (
-	"duyog/auth/rds"
-	"duyog/auth/service"
-	"duyog/generator"
-	"duyog/logger"
-	"duyog/writer"
+	"github.com/mownier/duyog/auth/rds"
+	"github.com/mownier/duyog/auth/service"
+	"github.com/mownier/duyog/generator"
+	"github.com/mownier/duyog/logger"
+	"github.com/mownier/duyog/writer"
 	"fmt"
 	"time"
 

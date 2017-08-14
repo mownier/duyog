@@ -1,7 +1,7 @@
 package main
 
 import (
-	"duyog/storage/service"
+	"github.com/mownier/duyog/storage/service"
 	"net/http"
 
 	"github.com/gorilla/mux"

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"duyog/loader"
+	"github.com/mownier/duyog/loader"
 	"flag"
 	"fmt"
 	"os"

@@ -1,8 +1,8 @@
 package service
 
 import (
-	"duyog/auth/store"
-	"duyog/progerr"
+	"github.com/mownier/duyog/auth/store"
+	"github.com/mownier/duyog/progerr"
 	"encoding/json"
 	"net/http"
 )

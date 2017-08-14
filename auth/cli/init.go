@@ -1,7 +1,7 @@
 package main
 
 import (
-	"duyog/cmd"
+	"github.com/mownier/duyog/cmd"
 	"fmt"
 	"os"
 )

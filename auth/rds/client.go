@@ -1,9 +1,9 @@
 package rds
 
 import (
-	"duyog/auth/store"
-	"duyog/generator"
-	"duyog/progerr"
+	"github.com/mownier/duyog/auth/store"
+	"github.com/mownier/duyog/generator"
+	"github.com/mownier/duyog/progerr"
 	"time"
 
 	"github.com/garyburd/redigo/redis"

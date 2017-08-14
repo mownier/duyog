@@ -1,7 +1,7 @@
 package main
 
 import (
-	"duyog/validator"
+	"github.com/mownier/duyog/validator"
 	"fmt"
 )
 

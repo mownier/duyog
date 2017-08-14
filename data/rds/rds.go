@@ -1,7 +1,7 @@
 package rds
 
 import (
-	"duyog/data/store"
+	"github.com/mownier/duyog/data/store"
 
 	"github.com/garyburd/redigo/redis"
 )
