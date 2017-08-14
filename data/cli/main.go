@@ -1,6 +1,11 @@
 package main
 
 import (
+	"fmt"
+	"log"
+	"net/http"
+	"time"
+
 	"github.com/mownier/duyog/data/rds"
 	"github.com/mownier/duyog/data/service"
 	"github.com/mownier/duyog/extractor"
@@ -8,10 +13,6 @@ import (
 	"github.com/mownier/duyog/logger"
 	"github.com/mownier/duyog/validator"
 	"github.com/mownier/duyog/writer"
-	"fmt"
-	"log"
-	"net/http"
-	"time"
 
 	"github.com/garyburd/redigo/redis"
 	"github.com/gorilla/mux"
@@ -37,7 +38,7 @@ func main() {
 	artistRes := service.ArtistResource(res, artistRepo)
 	playlistRes := service.PlaylistResource(res, playlistRepo)
 
-	validator := service.DataValidator(userRepo, songRepo, albumRepo, artistRepo, playlistRepo, logger.RequestLog())
+	verifier := service.NewVerifier(userRepo, songRepo, albumRepo, artistRepo, playlistRepo, logger.RequestLog())
 
 	r := mux.NewRouter().StrictSlash(true)
 
@@ -50,8 +51,8 @@ func main() {
 
 	s := rpc.NewServer()
 	s.RegisterCodec(json2.NewCodec(), "application/json")
-	s.RegisterService(validator, "DataValidator")
-	r.Handle("/"+config.Version+"/rpc/data/validate", s)
+	s.RegisterService(verifier, "Verifier")
+	r.Handle("/"+config.Version+"/data/verify", s)
 
 	fmt.Println(config.toString())
 

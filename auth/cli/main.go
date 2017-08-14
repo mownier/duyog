@@ -1,13 +1,14 @@
 package main
 
 import (
+	"fmt"
+	"time"
+
 	"github.com/mownier/duyog/auth/rds"
 	"github.com/mownier/duyog/auth/service"
 	"github.com/mownier/duyog/generator"
 	"github.com/mownier/duyog/logger"
 	"github.com/mownier/duyog/writer"
-	"fmt"
-	"time"
 
 	"log"
 	"net/http"
@@ -36,7 +37,8 @@ func main() {
 
 	userRes := service.UserResource(res, userRepo, tokenRepo, clientRepo, config.TokenExpiry)
 	tokenRes := service.TokenResource(res, userRepo, tokenRepo, clientRepo)
-	validator := service.AuthValidator(userRepo, clientRepo, logger.RequestLog())
+
+	verifier := service.NewVerifier(userRepo, clientRepo, logger.RequestLog())
 
 	r := mux.NewRouter().StrictSlash(true)
 
@@ -48,8 +50,8 @@ func main() {
 
 	s := rpc.NewServer()
 	s.RegisterCodec(json2.NewCodec(), "application/json")
-	s.RegisterService(validator, "AuthValidator")
-	r.Handle("/"+config.Version+"/rpc/token/verify", s)
+	s.RegisterService(verifier, "Verifier")
+	r.Handle("/"+config.Version+"/auth/verify", s)
 
 	fmt.Println(toString(config))
 
