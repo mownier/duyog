@@ -4,6 +4,9 @@
 # build
 build/
 
+# redis conf files
+redis_conf/
+
 # Binaries for programs and plugins
 *.exe
 *.dll
