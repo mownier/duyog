@@ -4,6 +4,9 @@
 # build
 build/
 
+# cli
+cli
+
 # redis conf files
 redis_conf/
 
