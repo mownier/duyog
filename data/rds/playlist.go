@@ -1,10 +1,11 @@
 package rds
 
 import (
+	"time"
+
 	"github.com/mownier/duyog/data/store"
 	"github.com/mownier/duyog/generator"
 	"github.com/mownier/duyog/progerr"
-	"time"
 
 	"github.com/garyburd/redigo/redis"
 )
@@ -90,7 +91,7 @@ func (r playlistRepo) Update(p store.Playlist) (store.Playlist, error) {
 		Key: p.Key,
 	}
 
-	if p.Name == "" && p.Name != pl.Name {
+	if p.Name != "" && p.Name != pl.Name {
 		_, err = conn.Do("HSET", "playlist:"+p.Key, "name", p.Name)
 
 		if err == nil {
@@ -98,7 +99,7 @@ func (r playlistRepo) Update(p store.Playlist) (store.Playlist, error) {
 		}
 	}
 
-	if p.Photo == "" && p.Photo != pl.Photo {
+	if p.Photo != "" && p.Photo != pl.Photo {
 		_, err = conn.Do("HSET", "playlist:"+p.Key, "photo", p.Photo)
 
 		if err == nil {
@@ -106,7 +107,7 @@ func (r playlistRepo) Update(p store.Playlist) (store.Playlist, error) {
 		}
 	}
 
-	if p.Desc == "" && p.Desc != pl.Desc {
+	if p.Desc != "" && p.Desc != pl.Desc {
 		_, err = conn.Do("HSET", "playlist:"+p.Key, "description", p.Desc)
 
 		if err == nil {
