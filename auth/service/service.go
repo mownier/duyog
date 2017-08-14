@@ -1,13 +1,14 @@
 package service
 
 import (
+	"encoding/json"
+	"net/http"
+
 	"github.com/mownier/duyog/auth/store"
 	"github.com/mownier/duyog/generator"
 	"github.com/mownier/duyog/progerr"
 	"github.com/mownier/duyog/validator"
 	"github.com/mownier/duyog/writer"
-	"encoding/json"
-	"net/http"
 
 	jwt "github.com/dgrijalva/jwt-go"
 )
