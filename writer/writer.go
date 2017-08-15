@@ -1,8 +1,9 @@
 package writer
 
 import (
-	"github.com/mownier/duyog/logger"
 	"net/http"
+
+	"github.com/mownier/duyog/logger"
 )
 
 // Response interface
