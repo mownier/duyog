@@ -1,10 +1,11 @@
 package rds
 
 import (
+	"time"
+
 	"github.com/mownier/duyog/data/store"
 	"github.com/mownier/duyog/generator"
 	"github.com/mownier/duyog/progerr"
-	"time"
 
 	"github.com/garyburd/redigo/redis"
 )
@@ -15,9 +16,9 @@ type songRepo struct {
 }
 
 func (r songRepo) Create(s store.Song, ar []store.ArtistKey, al []store.AlbumKey) (store.Songs, error) {
-	var songs store.Songs
+	songs := store.NewSongs()
 
-	if s.AudioURL == "" || s.Title == "" || s.Duration <= 0 || s.Year <= 0 {
+	if s.Title == "" || s.Duration <= 0 || s.Year <= 0 {
 		return songs, progerr.SongInvalidInfo
 	}
 
@@ -33,7 +34,7 @@ func (r songRepo) Create(s store.Song, ar []store.ArtistKey, al []store.AlbumKey
 	_, err := conn.Do("HMSET", "song:"+key,
 		"id", key,
 		"genre", s.Genre,
-		"stream_url", s.AudioURL,
+		"audio_url", s.AudioURL,
 		"title", s.Title,
 		"duration", s.Duration,
 		"year", s.Year)
@@ -42,8 +43,8 @@ func (r songRepo) Create(s store.Song, ar []store.ArtistKey, al []store.AlbumKey
 		return songs, progerr.Internal(err)
 	}
 
-	var artists store.Artists
 	var artistKeys []store.ArtistKey
+	artists := store.Artists{}
 
 	for _, v := range ar {
 		if v == "" {
@@ -79,8 +80,8 @@ func (r songRepo) Create(s store.Song, ar []store.ArtistKey, al []store.AlbumKey
 		return songs, progerr.SongHasNoArtist
 	}
 
-	var albums store.Albums
 	var albumKeys []store.AlbumKey
+	albums := store.Albums{}
 
 	for _, v := range al {
 		if v == "" {
@@ -171,7 +172,7 @@ func (r songRepo) Update(s store.Song) (store.Song, error) {
 		Key: s.Key,
 	}
 
-	if s.Duration <= 0 && s.Duration != so.Duration {
+	if s.Duration > 0 && s.Duration != so.Duration {
 		_, err = conn.Do("HSET", "song:"+s.Key, "duration", s.Duration)
 
 		if err == nil {
@@ -179,7 +180,7 @@ func (r songRepo) Update(s store.Song) (store.Song, error) {
 		}
 	}
 
-	if s.Year <= 0 && s.Year != so.Year {
+	if s.Year > 0 && s.Year != so.Year {
 		_, err = conn.Do("HSET", "song:"+s.Key, "year", s.Year)
 
 		if err == nil {
@@ -195,7 +196,7 @@ func (r songRepo) Update(s store.Song) (store.Song, error) {
 		}
 	}
 
-	if s.Title == "" && s.Title != so.Title {
+	if s.Title != "" && s.Title != so.Title {
 		_, err = conn.Do("HSET", "song:"+s.Key, "title", s.Title)
 
 		if err == nil {
@@ -203,7 +204,7 @@ func (r songRepo) Update(s store.Song) (store.Song, error) {
 		}
 	}
 
-	if s.AudioURL == "" && s.AudioURL != so.AudioURL {
+	if s.AudioURL != "" && s.AudioURL != so.AudioURL {
 		_, err = conn.Do("HSET", "song:"+s.Key, "audio_url", s.AudioURL)
 
 		if err == nil {
