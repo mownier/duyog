@@ -5,9 +5,12 @@ build_auth_server() {
         mkdir build/auth
     fi
 
-    go build ./auth/cli
-    mv cli ./build/auth/auth
-    cp ./auth/cli/config.json ./build/auth/config.json
+    if go build ./auth/cli; then
+        mv cli ./build/auth/auth
+        cp ./auth/cli/config.json ./build/auth/config.json
+    else
+        exit
+    fi
 }
 
 build_data_server() {
@@ -17,9 +20,13 @@ build_data_server() {
         mkdir build/data
     fi
 
-    go build ./data/cli
-    mv cli ./build/data/data
-    cp ./data/cli/config.json ./build/data/config.json
+    if go build ./data/cli; then
+        mv cli ./build/data/data &&
+        cp ./data/cli/config.json ./build/data/config.json
+    else
+        exit
+    fi
+
 }
 
 build_storage_server() {
@@ -53,9 +60,12 @@ build_storage_server() {
         mkdir build/storage/file/playlist
     fi
 
-    go build ./storage/cli
-    mv cli ./build/storage/storage
-    cp ./storage/cli/config.json ./build/storage/config.json
+    if go build ./storage/cli; then
+        mv cli ./build/storage/storage &&
+        cp ./storage/cli/config.json ./build/storage/config.json
+    else
+        exit
+    fi
 }
 
 build_all_servers() {
@@ -76,4 +86,4 @@ case $1 in
     "storage") build_storage_server;;
 esac
 
-echo "Finished"
+echo "Build finished"
