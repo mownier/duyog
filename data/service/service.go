@@ -1,14 +1,15 @@
 package service
 
 import (
+	"encoding/json"
+	"net/http"
+	"strings"
+
 	"github.com/mownier/duyog/data/store"
 	"github.com/mownier/duyog/extractor"
 	"github.com/mownier/duyog/progerr"
 	"github.com/mownier/duyog/validator"
 	"github.com/mownier/duyog/writer"
-	"encoding/json"
-	"net/http"
-	"strings"
 )
 
 type albumKeyParam struct {
@@ -57,7 +58,7 @@ func validate(w http.ResponseWriter, r *http.Request, res Resource, c pathCode) 
 		return auth, false
 	}
 
-	token := extractor.ExtractAuth(res.AuthExtractor, "")
+	token := extractor.ExtractAuth(res.AuthExtractor, r.Header.Get("Authorization"))
 	reply, err := validator.ValidateAuth(res.AuthValidator, token)
 
 	if err != nil {
