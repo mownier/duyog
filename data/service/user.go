@@ -1,8 +1,9 @@
 package service
 
 import (
-	"github.com/mownier/duyog/data/store"
 	"net/http"
+
+	"github.com/mownier/duyog/data/store"
 
 	"github.com/gorilla/mux"
 )
@@ -70,6 +71,7 @@ func (u user) register(w http.ResponseWriter, r *http.Request) {
 	}
 
 	param.Key = store.UserKey(auth.UserKey)
+	param.Email = auth.Email
 	user, err := store.RegisterUser(u.userRepo, param)
 
 	if err != nil {
