@@ -1,10 +1,11 @@
 package rds
 
 import (
+	"time"
+
 	"github.com/mownier/duyog/data/store"
 	"github.com/mownier/duyog/generator"
 	"github.com/mownier/duyog/progerr"
-	"time"
 
 	"github.com/garyburd/redigo/redis"
 )
@@ -95,7 +96,7 @@ func (r userRepo) Update(u store.User) (store.User, error) {
 
 	var tmp store.User
 
-	if u.Avatar == "" && u.Avatar != us.Avatar {
+	if u.Avatar != "" && u.Avatar != us.Avatar {
 		_, err = conn.Do("HSET", "user:"+u.Key, "avatar", u.Avatar)
 
 		if err == nil {
@@ -103,7 +104,7 @@ func (r userRepo) Update(u store.User) (store.User, error) {
 		}
 	}
 
-	if u.LastName == "" && u.LastName != us.LastName {
+	if u.LastName != "" && u.LastName != us.LastName {
 		_, err = conn.Do("HSET", "user:"+u.Key, "last_name", u.LastName)
 
 		if err == nil {
@@ -111,7 +112,7 @@ func (r userRepo) Update(u store.User) (store.User, error) {
 		}
 	}
 
-	if u.FirstName == "" && u.FirstName != us.FirstName {
+	if u.FirstName != "" && u.FirstName != us.FirstName {
 		_, err = conn.Do("HSET", "user:"+u.Key, "first_name", u.FirstName)
 
 		if err == nil {
