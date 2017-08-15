@@ -1,6 +1,7 @@
 package progerr
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -195,7 +196,13 @@ func (e Err) Error() string {
 
 // Data method
 func (e Err) Data() []byte {
-	return []byte{}
+	data, err := json.Marshal(e)
+
+	if err != nil {
+		return []byte(`{"error":"unknown"}`)
+	}
+
+	return data
 }
 
 // New method
