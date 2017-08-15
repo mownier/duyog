@@ -1,47 +1,47 @@
 run_auth_server() {
-    cd ./build/auth
-    ./auth start
+    if ! ./build/auth/auth start -config ./build/auth/config.json; then
+        exit
+    fi
 }
 
 run_data_server() {
-    cd build/data
-    ./data start
+    if  ! ./build/data/data start -config ./build/data/config.json; then
+        exit
+    fi
 }
 
 run_storage_server() {
-    cd build/storage
-    ./storage start
+    if ./build/storage/storage start -config ./build/storage/config.json; then
+        exit
+    fi
 }
 
-run_auth_db() {
-    cd redis_conf
-    redis-server auth.conf
+run_all_servers() {
+    trap exit_servers SIGINT
+    run_auth_server >> ./build/auth.log 2<&1 &
+    run_data_server >> ./build/data.log 2<&1 &
+    run_storage_server >> ./build/storage.log 2<&1 &
+    wait
 }
 
-run_data_db() {
-    cd redis_conf
-    redis-server data.conf
-}
-
-run_storage_db() {
-    cd redis_conf
-    redis-server storage.conf
+exit_servers() {
+    killall auth data storage
 }
 
 case $1 in
-    "server") 
-        case $2 in
-            "auth") run_auth_server;;
-            "data") run_data_server;;
-            "storage") run_storage_server;;
-        esac
+    "") 
+        run_all_servers
         ;;
 
-    "db")
-        case $2 in
-            "auth") run_auth_db;;
-            "data") run_data_db;;
-            "storage") run_storage_db;;
-        esac
+    "auth") 
+        run_auth_server >> ./build/auth.log 2<&1
+        ;;
+
+    "data") 
+        run_data_server >> ./build/data.log 2<&1
+        ;;
+
+    "storage")
+        run_storage_server >> ./build/storage.log 2<&1
         ;;
 esac
