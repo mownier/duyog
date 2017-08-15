@@ -54,7 +54,7 @@ type Song struct {
 // User struct
 type User struct {
 	Key       UserKey `json:"id,omitempty" redis:"id"`
-	Email     string  `json:"email" redis:"email"`
+	Email     string  `json:"email,omitempty" redis:"email"`
 	Avatar    string  `json:"avatar,omitempty" redis:"avatar"`
 	LastName  string  `json:"last_name,omitempty" redis:"last_name"`
 	FirstName string  `json:"first_name,omitempty" redis:"first_name"`
@@ -83,4 +83,16 @@ type Songs struct {
 
 	AlbumKeys  map[SongKey][]AlbumKey  `json:"album_keys,omitempty"`
 	ArtistKeys map[SongKey][]ArtistKey `json:"artist_keys,omitempty"`
+}
+
+// NewSongs method
+func NewSongs() Songs {
+	return Songs{
+		Songs:   map[SongKey]Song{},
+		Albums:  Albums{},
+		Artists: Artists{},
+
+		AlbumKeys:  map[SongKey][]AlbumKey{},
+		ArtistKeys: map[SongKey][]ArtistKey{},
+	}
 }
