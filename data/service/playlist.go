@@ -1,8 +1,9 @@
 package service
 
 import (
-	"github.com/mownier/duyog/data/store"
 	"net/http"
+
+	"github.com/mownier/duyog/data/store"
 
 	"github.com/gorilla/mux"
 )
@@ -87,6 +88,8 @@ func (p playlist) update(w http.ResponseWriter, r *http.Request) {
 		writeRespErr(w, r, p.ResponseWriter, err)
 		return
 	}
+
+	playlist.Key = ""
 
 	marshalResponse(w, r, p.ResponseWriter, playlist)
 }
