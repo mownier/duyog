@@ -9,40 +9,13 @@ import (
 	"github.com/mownier/duyog/validator"
 	"github.com/mownier/duyog/writer"
 
-	"encoding/json"
-	"flag"
-	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
 	"time"
 
 	"github.com/garyburd/redigo/redis"
 	"github.com/gorilla/mux"
 )
-
-var config option
-
-func init() {
-	configPath := flag.String("config", "./config.json", "Path of the configuration named 'config.json'")
-	flag.Parse()
-
-	data, err := ioutil.ReadFile(*configPath)
-
-	if err != nil {
-		log.Println(err)
-		os.Exit(0)
-	}
-
-	err = json.Unmarshal(data, &config)
-
-	if err != nil {
-		log.Println("error: can not parse config file to json")
-		os.Exit(0)
-	}
-
-	log.Println(config.toString())
-}
 
 func main() {
 	pool := newPool()
