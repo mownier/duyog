@@ -110,7 +110,7 @@ print_usage() {
     echo ""
 }
 
-if [ $1 = "help" ]; then
+if [ "$1" = "help" ]; then
     print_usage
 else
     start
