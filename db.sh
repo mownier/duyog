@@ -105,6 +105,23 @@ get_db_status() {
     fi
 }
 
+print_usage() {
+    echo ""
+    echo "USAGE:"
+    echo ""
+    echo "  help"
+    echo "    - Prints the usage info"
+    echo ""
+    echo "  redis [start|stop] [auth|data|storage]"
+    echo "    - Starts/Stops the redis db for auth, data, and storage servers"
+    echo "    - 'redis start' will start redis db for all the servers"
+    echo "    - 'redis stop' will stop redis db for all the servers"
+    echo ""
+    echo "  list"
+    echo "    - Displays the status of all db"
+    echo ""
+}
+
 case $1 in
     "redis")
         cd redis_conf
@@ -128,4 +145,7 @@ case $1 in
 
     "list")
         list;;
+    
+    "help")
+        print_usage;;
 esac

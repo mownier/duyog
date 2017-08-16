@@ -100,6 +100,26 @@ list_servers() {
     echo ""
 }
 
+print_usage() {
+    echo ""
+    echo "USAGE:"
+    echo ""
+    echo "  help"
+    echo "    - Prints the usage info"
+    echo ""
+    echo "  start [auth|data|storage]"
+    echo "    - Starts the auth, data, and storage servers"
+    echo "    - 'start' will start all the servers"
+    echo ""
+    echo "  stop [auth|data|storage]"
+    echo "    - Stops the auth, data, and storage servers"
+    echo "    - 'stop' will stop all the servers"
+    echo ""
+    echo "  list"
+    echo "    - Displays the status of all the servers"
+    echo ""
+}
+
 is_server_running() {
     if [ -f $1 ]; then
         echo "started"
@@ -126,6 +146,8 @@ case $1 in
         esac;;
 
     "list")
-        list_servers
-        ;;
+        list_servers;;
+    
+    "help")
+        print_usage;;
 esac
