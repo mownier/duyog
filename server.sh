@@ -89,6 +89,7 @@ list_servers() {
     local auth_s=$(is_server_running $AUTH_SERVER_PID)
     local data_s=$(is_server_running $DATA_SERVER_PID)
     local stor_s=$(is_server_running $STORAGE_SERVER_PID)
+    echo ""
     echo "+---------+-----------+"
     echo "| server  | status    |"
     echo "+---------+-----------+"
@@ -96,6 +97,7 @@ list_servers() {
     echo "| data    | $data_s   |"
     echo "| storage | $stor_s   |"
     echo "+---------+-----------+"
+    echo ""
 }
 
 is_server_running() {
