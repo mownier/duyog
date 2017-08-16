@@ -1,3 +1,5 @@
+BUILD_FILE=./app/build.go
+
 build_auth_server() { 
     echo "building auth server"
 
@@ -73,16 +75,65 @@ build_all_servers() {
     build_storage_server
 }
 
-if [ ! -d "build" ]; then
-    mkdir build
+print_usage() {
+    echo ""
+    echo "USAGE:"
+    echo ""
+    echo "  note: '$ ./build.sh' will build all the servers and update the build file"
+    echo ""
+    echo "  help"
+    echo "    - Prints the usage info"
+    echo ""
+    echo "  auth"
+    echo "    - Builds the auth server"
+    echo ""
+    echo "  data"
+    echo "    - Builds the data server"
+    echo ""
+    echo "  storage"
+    echo "    - Builds the storage server"
+    echo ""
+}
+
+write_build() {
+    echo "package app" > $BUILD_FILE
+    echo "" >> $BUILD_FILE
+    echo "// Build denotes the build of the program" >> $BUILD_FILE
+    echo "const Build = \""$1"\"" >> $BUILD_FILE
+}
+
+update_build() {
+    local build=$(extract_build)
+    local new=Y$(date +"%Y")M$(date +"%m")D$(date +"%d")
+    local b=`echo $build | cut -d \B -f 2`
+    ((b++))
+    build=Y$(date +"%Y")M$(date +"%m")D$(date +"%d")B$b
+    write_build $build
+}
+
+extract_build() {
+    local content=$(cat $BUILD_FILE)
+    local b=${content:68}
+    b=${b/\"/""}
+    b=${b/\"/""}
+    echo $b
+}
+
+if [ "$1" = "help" ]; then
+    print_usage
+else
+    if [ ! -d "build" ]; then
+        mkdir build
+    fi
+
+    case $1 in
+        "") build_all_servers && update_build;;
+        "auth") build_auth_server;;
+        "data") build_data_server;;
+        "storage") build_storage_server;;
+    esac
+
+    echo "build finished"
+    echo build: $(extract_build)
 fi
 
-
-case $1 in
-    "") build_all_servers;;
-    "auth") build_auth_server;;
-    "data") build_data_server;;
-    "storage") build_storage_server;;
-esac
-
-echo "build finished"
