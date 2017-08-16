@@ -119,5 +119,5 @@ else
         "major") update_major;;
         "bug-fix") update_bug_fix;;
     esac
-    echo v$(extract_version)
+    echo version: $(extract_version)
 fi
