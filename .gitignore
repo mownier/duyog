@@ -7,6 +7,9 @@ build/
 # redis conf files
 redis_conf/
 
+# cli files
+*/cli/cli
+
 # Binaries for programs and plugins
 *.exe
 *.dll
