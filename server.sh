@@ -85,6 +85,27 @@ stop_all_servers() {
     stop_auth_server
 }
 
+list_servers() {
+    local auth_s=$(is_server_running $AUTH_SERVER_PID)
+    local data_s=$(is_server_running $DATA_SERVER_PID)
+    local stor_s=$(is_server_running $STORAGE_SERVER_PID)
+    echo "+---------+-----------+"
+    echo "| server  | status    |"
+    echo "+---------+-----------+"
+    echo "| auth    | $auth_s   |"
+    echo "| data    | $data_s   |"
+    echo "| storage | $stor_s   |"
+    echo "+---------+-----------+"
+}
+
+is_server_running() {
+    if [ -f $1 ]; then
+        echo "started"
+    else
+        echo "stopped"
+    fi
+}
+
 case $1 in
     "start") 
         case $2 in
@@ -101,4 +122,8 @@ case $1 in
             "data") stop_data_server;;
             "storage") stop_storage_server;;
         esac;;
+
+    "list")
+        list_servers
+        ;;
 esac
