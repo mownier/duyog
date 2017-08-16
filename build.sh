@@ -1,5 +1,5 @@
 build_auth_server() { 
-    echo "Building auth server"
+    echo "building auth server"
 
     if [ ! -d "build/auth" ]; then
         mkdir build/auth
@@ -14,7 +14,7 @@ build_auth_server() {
 }
 
 build_data_server() {
-    echo "Building data server"
+    echo "building data server"
     
     if [ ! -d "build/data" ]; then
         mkdir build/data
@@ -26,11 +26,10 @@ build_data_server() {
     else
         exit
     fi
-
 }
 
 build_storage_server() {
-    echo "Building storage server"
+    echo "building storage server"
 
     if [ ! -d "build/storage" ]; then
         mkdir build/storage
@@ -86,4 +85,4 @@ case $1 in
     "storage") build_storage_server;;
 esac
 
-echo "Build finished"
+echo "build finished"
