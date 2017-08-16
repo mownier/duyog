@@ -128,12 +128,4 @@ case $1 in
 
     "list")
         list;;
-    
-    "stop")
-        cd redis_conf
-        stop_all_redis;;
-    
-    "start")
-        cd redis_conf
-        start_all_redis;;
 esac
