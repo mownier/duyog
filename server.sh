@@ -27,13 +27,9 @@ start_data_server() {
     if [ -f $DATA_SERVER_PID ]; then
         echo "already running data server"
     else
-        if [ ! -f $AUTH_SERVER_PID ]; then
-            echo "no auth server running"
-        else
-            $DATA_SERVER start -config $DATA_SERVER_CNF >> $DATA_SERVER_LOG 2<&1 & data_pid=$!
-            echo "data server started"
-            echo $data_pid > $DATA_SERVER_PID
-        fi
+        $DATA_SERVER start -config $DATA_SERVER_CNF >> $DATA_SERVER_LOG 2<&1 & data_pid=$!
+        echo "data server started"
+        echo $data_pid > $DATA_SERVER_PID
     fi
 }
 
@@ -41,17 +37,9 @@ start_storage_server() {
     if [ -f $STORAGE_SERVER_PID ]; then
         echo "already running storage server"
     else
-        if [ ! -f $AUTH_SERVER_PID ]; then
-            echo "no auth server running"
-        else
-            if [ ! -f $DATA_SERVER_PID ]; then
-                echo "no data server running"
-            else
-                $STORAGE_SERVER start -config $STORAGE_SERVER_CNF >> $STORAGE_SERVER_LOG 2<&1 & storage_pid=$!
-                echo "storage server started"
-                echo $storage_pid > $STORAGE_SERVER_PID
-            fi
-        fi
+        $STORAGE_SERVER start -config $STORAGE_SERVER_CNF >> $STORAGE_SERVER_LOG 2<&1 & storage_pid=$!
+        echo "storage server started"
+        echo $storage_pid > $STORAGE_SERVER_PID
     fi
 }
 
