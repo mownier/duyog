@@ -4,8 +4,13 @@
 # build
 build/
 
-# redis conf files
-redis_conf/
+# release
+release/
+
+# redis_conf
+redis_conf/*.pid
+redis_conf/*.log
+redis_conf/*.rdb
 
 # cli files
 */cli/cli
