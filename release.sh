@@ -1,10 +1,4 @@
 VERSION_FILE=./app/version.go
-VERSION_CONTENT="
-package app
-
-// Version denotes the version of the program
-const Version = \"%s\"
-"
 
 start() {
     rm -rf build
@@ -68,7 +62,6 @@ extract_bug_fix() {
     fi
 }
 
-
 update_major() {
     local version=$(extract_version)
     local major=$(extract_major $version)
@@ -96,12 +89,35 @@ update_bug_fix() {
     write_version $version
 }
 
-start
+print_usage() {
+    echo ""
+    echo "USAGE:"
+    echo ""
+    echo "  help"
+    echo "    - Prints the usage info"
+    echo ""
+    echo "  major"
+    echo "    - Increment the major version"
+    echo "    - If current version is 2.1.1, it will update to 3.0"
+    echo ""
+    echo "  minor"
+    echo "    - Increment the minor version"
+    echo "    - If current version is 2.0.1, it will update to 2.1"
+    echo ""
+    echo "  bug-fix"
+    echo "    - Increment the bug-fix version"
+    echo "    - If current version is 2.3.4, it will update to 2.3.5"
+    echo ""
+}
 
-case $1 in
-    "minor") update_minor;;
-    "major") update_major;;
-    "bug-fix") update_bug_fix;;
-esac
-
-echo v$(extract_version)
+if [ $1 = "help" ]; then
+    print_usage
+else
+    start
+    case $1 in
+        "minor") update_minor;;
+        "major") update_major;;
+        "bug-fix") update_bug_fix;;
+    esac
+    echo v$(extract_version)
+fi
