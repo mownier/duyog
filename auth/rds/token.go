@@ -8,14 +8,23 @@ import (
 	"github.com/garyburd/redigo/redis"
 )
 
+// tokenRepo implements the TokenRepo interface in
+// package store of the authentication server.
 type tokenRepo struct {
-	keyGen     generator.Key
-	accessGen  generator.Access
+	// keyGen generates a unique key upon creating a client
+	keyGen generator.Key
+
+	// accessGen generates an access token
+	accessGen generator.Access
+
+	// refreshGen generates a refresh token
 	refreshGen generator.Token
 
+	// pool maintains a pool of connections for the redis database
 	pool *redis.Pool
 }
 
+// Create creates and stores a new token in the redis database.
 func (r tokenRepo) Create(i generator.AccessInput) (store.Token, error) {
 	var token store.Token
 
@@ -82,6 +91,9 @@ func (r tokenRepo) Create(i generator.AccessInput) (store.Token, error) {
 	return token, nil
 }
 
+// Refresh refreshes an access token. Whether expired or not, the
+// access token will be replaced. The old access token will be
+// removed from the redis database.
 func (r tokenRepo) Refresh(i store.RefreshTokenInput) (store.Token, error) {
 	var token store.Token
 
@@ -188,7 +200,8 @@ func (r tokenRepo) Refresh(i store.RefreshTokenInput) (store.Token, error) {
 	return token, nil
 }
 
-// TokenRepo method
+// TokenRepo returns an implementation of the TokenRepo
+// interface in the package store of the authentication server
 func TokenRepo(k generator.Key, a generator.Access, r generator.Token, p *redis.Pool) store.TokenRepo {
 	return tokenRepo{
 		keyGen:     k,
