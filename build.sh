@@ -1,5 +1,11 @@
-BUILD_FILE=./app/build.go
-VERSION_FILE=./app/version.go
+AUTH_BUILD_FILE=./auth/app/build.go
+AUTH_VERSION_FILE=./auth/app/version.go
+
+DATA_BUILD_FILE=./data/app/build.go
+DATA_VERSION_FILE=./data/app/version.go
+
+STORAGE_BUILD_FILE=./storage/app/build.go
+STORAGE_VERSION_FILE=./storage/app/version.go
 
 build_auth_server() { 
     echo "building auth server"
@@ -70,17 +76,9 @@ build_storage_server() {
     fi
 }
 
-build_all_servers() {
-    build_auth_server
-    build_data_server
-    build_storage_server
-}
-
 print_usage() {
     echo ""
     echo "USAGE:"
-    echo ""
-    echo "  note: '$ ./build.sh' will build all the servers and update the build file"
     echo ""
     echo "  help"
     echo "    - Prints the usage info"
@@ -97,24 +95,25 @@ print_usage() {
 }
 
 write_build() {
-    echo "package app" > $BUILD_FILE
-    echo "" >> $BUILD_FILE
-    echo "// Build denotes the build of the program" >> $BUILD_FILE
-    echo "const Build = \""$1"\"" >> $BUILD_FILE
+    echo "package app" > $2
+    echo "" >> $2
+    echo "// Build denotes the build of the program" >> $2
+    echo "const Build = \""$1"\"" >> $2
 }
 
 update_build() {
-    local version=$(extract_version)
+    local version=$(extract_version $1)
     local major=$(extract_major $version)
     local new=${major}D$(date +"%y")U$(date +"%V")Y$(date +"%u")O$(date +"%H")
-    local build=$(extract_build)
+    local build=$(extract_build $2)
     local b=`echo $build | cut -d \G -f 2`
     ((b++))
-    write_build ${new}G${b}
+    new=${new}G${b}
+    write_build $new $2
 }
 
 extract_build() {
-    local content=$(cat $BUILD_FILE)
+    local content=$(cat $1)
     local b=${content:68}
     b=${b/\"/""}
     b=${b/\"/""}
@@ -122,7 +121,7 @@ extract_build() {
 }
 
 extract_version() {
-    local content=$(cat $VERSION_FILE)
+    local content=$(cat $1)
     local v=${content:74}
     v=${v/\"/""}
     v=${v/\"/""}
@@ -140,20 +139,29 @@ extract_major() {
 
 if [ "$1" = "help" ]; then
     print_usage
-    update_build
 else
+    if [ "$1" = "" ]; then
+        exit 0
+    fi
+    
     if [ ! -d "build" ]; then
         mkdir build
     fi
 
     case $1 in
-        "") build_all_servers && update_build;;
-        "auth") build_auth_server;;
-        "data") build_data_server;;
-        "storage") build_storage_server;;
+        "auth") 
+            update_build $AUTH_VERSION_FILE $AUTH_BUILD_FILE && build_auth_server
+            echo auth server new build: $(extract_build $AUTH_BUILD_FILE);;
+
+        "data") 
+            update_build $DATA_VERSION_FILE $DATA_BUILD_FILE && build_data_server
+            echo data server new build: $(extract_build $DATA_BUILD_FILE);;
+
+        "storage") 
+            update_build $STORAGE_VERSION_FILE $STORAGE_BUILD_FILE && build_storage_server
+            echo storage server new build: $(extract_build $STORAGE_BUILD_FILE);;
     esac
 
     echo "build finished"
-    echo build: $(extract_build)
 fi
 
