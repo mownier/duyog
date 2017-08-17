@@ -1,3 +1,5 @@
+// Package app provides information about the application
+// such as it's build and version
 package app
 
 // Build denotes the build of the program
