@@ -1,21 +1,31 @@
 package rds
 
 import (
+	"time"
+
 	"github.com/mownier/duyog/auth/store"
 	"github.com/mownier/duyog/generator"
 	"github.com/mownier/duyog/progerr"
-	"time"
 
 	"github.com/garyburd/redigo/redis"
 )
 
+// userRepo implements the UserRepo interface in
+// package store of the authentication server
 type userRepo struct {
-	keyGen  generator.Key
+	// keyGen generates key for upon creating a user
+	keyGen generator.Key
+
+	// keyGen generates an encrypted password on creating
+	// a user, changing a password, and validating user
+	// credentials
 	passGen generator.Pass
 
+	// pool maintains a pool of connections for the redis database
 	pool *redis.Pool
 }
 
+// Create creates and stores a new user in the redis database
 func (r userRepo) Create(u store.User) (store.User, error) {
 	var user store.User
 
@@ -64,6 +74,11 @@ func (r userRepo) Create(u store.User) (store.User, error) {
 	return user, nil
 }
 
+// ChangePass sets a new password of a user.
+// If the new password is the same with the current
+// password, the new password is treated as not valid.
+// If the input current password is not the same with the
+// stored current password, it is treated as a mismatch.
 func (r userRepo) ChangePass(i store.ChangePassInput) error {
 	if i.Email == "" {
 		return progerr.UserInvalidEmail
@@ -111,6 +126,9 @@ func (r userRepo) ChangePass(i store.ChangePassInput) error {
 	return nil
 }
 
+// ValidateCredential validates credential of a user.
+// Credential is not valid if email is not existing or
+// the email and the password do not match.
 func (r userRepo) ValidateCredential(u store.User) (store.User, error) {
 	var user store.User
 
@@ -154,6 +172,8 @@ func (r userRepo) ValidateCredential(u store.User) (store.User, error) {
 	return user, nil
 }
 
+// GetByKey retrieves a user information from the
+// redis database using a key of a user.
 func (r userRepo) GetByKey(k string) (store.User, error) {
 	var user store.User
 
@@ -189,7 +209,8 @@ func (r userRepo) GetByKey(k string) (store.User, error) {
 	return user, nil
 }
 
-// UserRepo method
+// UserRepo returns an implementation of the UserRepo interface
+// in the package store of the authentication server.
 func UserRepo(k generator.Key, g generator.Pass, p *redis.Pool) store.UserRepo {
 	return userRepo{
 		keyGen:  k,
