@@ -1,4 +1,4 @@
 package app
 
 // Build denotes the build of the program
-const Build = "Y2017M08D16B2"
+const Build = "0D17U33Y4O10G0"
