@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/mownier/duyog/data/app"
 	"github.com/mownier/duyog/data/rds"
 	"github.com/mownier/duyog/data/service"
 	"github.com/mownier/duyog/extractor"
@@ -56,6 +57,7 @@ func main() {
 
 	fmt.Println(config.toString())
 
+	log.Printf("(c) %v Duyog Data Server version %v, build %v\n", time.Now().Year(), app.Version, app.Build)
 	log.Println("starting server at", config.NetAddr)
 	log.Fatal(http.ListenAndServe(config.NetAddr, r))
 }

@@ -2,16 +2,16 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"net/http"
 	"time"
 
+	"github.com/mownier/duyog/auth/app"
 	"github.com/mownier/duyog/auth/rds"
 	"github.com/mownier/duyog/auth/service"
 	"github.com/mownier/duyog/generator"
 	"github.com/mownier/duyog/logger"
 	"github.com/mownier/duyog/writer"
-
-	"log"
-	"net/http"
 
 	"github.com/garyburd/redigo/redis"
 	"github.com/gorilla/mux"
@@ -55,6 +55,7 @@ func main() {
 
 	fmt.Println(toString(config))
 
+	log.Printf("(c) %v Duyog Auth Server version %v, build %v\n", time.Now().Year(), app.Version, app.Build)
 	log.Println("starting server at", config.NetAddr)
 	log.Fatal(http.ListenAndServe(config.NetAddr, r))
 }

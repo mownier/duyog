@@ -1,17 +1,18 @@
 package main
 
 import (
+	"log"
+	"net/http"
+	"time"
+
 	"github.com/mownier/duyog/extractor"
 	"github.com/mownier/duyog/generator"
 	"github.com/mownier/duyog/logger"
+	"github.com/mownier/duyog/storage/app"
 	"github.com/mownier/duyog/storage/rds"
 	"github.com/mownier/duyog/storage/service"
 	"github.com/mownier/duyog/validator"
 	"github.com/mownier/duyog/writer"
-
-	"log"
-	"net/http"
-	"time"
 
 	"github.com/garyburd/redigo/redis"
 	"github.com/gorilla/mux"
@@ -42,6 +43,7 @@ func main() {
 	setupArtistRoutes(r, artistRes)
 	setupPlaylistRoutes(r, playlistRes)
 
+	log.Printf("(c) %v Duyog Storage Server version %v, build %v\n", time.Now().Year(), app.Version, app.Build)
 	log.Println("starting server at", config.NetAddr)
 	log.Fatal(http.ListenAndServe(config.NetAddr, r))
 }
