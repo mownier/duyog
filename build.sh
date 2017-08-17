@@ -1,4 +1,5 @@
 BUILD_FILE=./app/build.go
+VERSION_FILE=./app/version.go
 
 build_auth_server() { 
     echo "building auth server"
@@ -103,12 +104,13 @@ write_build() {
 }
 
 update_build() {
+    local version=$(extract_version)
+    local major=$(extract_major $version)
+    local new=${major}D$(date +"%y")U$(date +"%V")Y$(date +"%u")O$(date +"%H")
     local build=$(extract_build)
-    local new=Y$(date +"%Y")M$(date +"%m")D$(date +"%d")
-    local b=`echo $build | cut -d \B -f 2`
+    local b=`echo $build | cut -d \G -f 2`
     ((b++))
-    build=Y$(date +"%Y")M$(date +"%m")D$(date +"%d")B$b
-    write_build $build
+    write_build ${new}G${b}
 }
 
 extract_build() {
@@ -119,8 +121,26 @@ extract_build() {
     echo $b
 }
 
+extract_version() {
+    local content=$(cat $VERSION_FILE)
+    local v=${content:74}
+    v=${v/\"/""}
+    v=${v/\"/""}
+    echo $v
+}
+
+extract_major() {
+    local v=`echo $1 | cut -d \. -f 1`
+    if [ ${#v} = 0 ]; then
+        echo 0
+    else
+        echo $v
+    fi
+}
+
 if [ "$1" = "help" ]; then
     print_usage
+    update_build
 else
     if [ ! -d "build" ]; then
         mkdir build
