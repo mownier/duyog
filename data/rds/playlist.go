@@ -268,19 +268,29 @@ func (r playlistRepo) GetByUser(k store.UserKey) (store.Playlists, error) {
 	conn := r.pool.Get()
 	defer conn.Close()
 
-	data, err := redis.Values(conn.Do("SMEMBERS", "user:"+k+":playlists"))
+	data, err := conn.Do("EXISTS", "user:"+k)
 
 	if err != nil {
 		return playlists, progerr.Internal(err)
 	}
 
-	if len(data) == 0 {
+	if data.(int64) == 0 {
+		return playlists, progerr.UserNotFound
+	}
+
+	data, err = redis.Values(conn.Do("SMEMBERS", "user:"+k+":playlists"))
+
+	if err != nil {
+		return playlists, progerr.Internal(err)
+	}
+
+	if len(data.([]interface{})) == 0 {
 		return playlists, progerr.UserHasNoPlaylists
 	}
 
-	var tmp store.Playlists
+	tmp := store.NewPlaylists()
 
-	for _, v := range data {
+	for _, v := range data.([]interface{}) {
 		if len(v.([]byte)) == 0 {
 			continue
 		}
@@ -307,6 +317,8 @@ func (r playlistRepo) GetByUser(k store.UserKey) (store.Playlists, error) {
 		tmp.Playlists[key] = p
 	}
 
+	playlists = tmp
+
 	return playlists, nil
 }
 
@@ -320,7 +332,17 @@ func (r playlistRepo) getCreator(k store.PlaylistKey) (store.UserKey, error) {
 	conn := r.pool.Get()
 	defer conn.Close()
 
-	data, err := conn.Do("GET", "playlist:"+k+":user")
+	data, err := conn.Do("EXISTS", "playlist:"+k)
+
+	if err != nil {
+		return key, progerr.Internal(err)
+	}
+
+	if data.(int64) == 0 {
+		return key, progerr.PlaylistNotFound
+	}
+
+	data, err = conn.Do("GET", "playlist:"+k+":user")
 
 	if err != nil {
 		return key, progerr.Internal(err)
