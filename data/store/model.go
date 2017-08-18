@@ -71,7 +71,7 @@ type Users map[UserKey]User
 
 // Playlists struct
 type Playlists struct {
-	Creators  Users                    `json:"creators,omitempty"`
+	Creators  map[PlaylistKey]User     `json:"creators,omitempty"`
 	Playlists map[PlaylistKey]Playlist `json:"playlists"`
 }
 
@@ -94,5 +94,13 @@ func NewSongs() Songs {
 
 		AlbumKeys:  map[SongKey][]AlbumKey{},
 		ArtistKeys: map[SongKey][]ArtistKey{},
+	}
+}
+
+// NewPlaylists method
+func NewPlaylists() Playlists {
+	return Playlists{
+		Creators:  map[PlaylistKey]User{},
+		Playlists: map[PlaylistKey]Playlist{},
 	}
 }
