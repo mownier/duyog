@@ -29,6 +29,22 @@ func (r songRepo) Create(s store.Song, ar []store.ArtistKey, al []store.AlbumKey
 	conn := r.pool.Get()
 	defer conn.Close()
 
+	var existingArtists []store.ArtistKey
+
+	for _, k := range ar {
+		data, err := conn.Do("EXISTS", "artist:"+k)
+
+		if err != nil || data.(int64) == 0 {
+			continue
+		}
+
+		existingArtists = append(existingArtists, k)
+	}
+
+	if len(existingArtists) == 0 {
+		return songs, progerr.SongHasNoArtist
+	}
+
 	key := generator.GenerateKey(r.keyGen)
 
 	_, err := conn.Do("HMSET", "song:"+key,
@@ -46,7 +62,7 @@ func (r songRepo) Create(s store.Song, ar []store.ArtistKey, al []store.AlbumKey
 	var artistKeys []store.ArtistKey
 	artists := store.Artists{}
 
-	for _, v := range ar {
+	for _, v := range existingArtists {
 		if v == "" {
 			continue
 		}
@@ -159,6 +175,10 @@ func (r songRepo) Update(s store.Song) (store.Song, error) {
 
 	if err != nil {
 		return song, progerr.Internal(err)
+	}
+
+	if len(data) == 0 {
+		return song, progerr.SongNotFound
 	}
 
 	so := store.Song{}
