@@ -75,7 +75,7 @@ var (
 	// UserInvalidPassword error
 	UserInvalidPassword = New("invalid password", http.StatusBadRequest)
 	// UserMismatchedCurrentPass error
-	UserMismatchedCurrentPass = New("Ccurrent password not the same", http.StatusBadRequest)
+	UserMismatchedCurrentPass = New("current password not the same", http.StatusBadRequest)
 	// UserMismatchedPass error
 	UserMismatchedPass = New("mismatched password", http.StatusBadRequest)
 	// UserNotFound error
