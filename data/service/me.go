@@ -43,7 +43,7 @@ func (m me) Update() ResourceHandler           { return m.update }
 func (m me) AddPlaylists() ResourceHandler     { return m.addPlaylists }
 func (m me) GetPlaylists() ResourceHandler     { return m.getPlaylists }
 func (m me) UpdatePlaylist() ResourceHandler   { return m.updatePlaylist }
-func (m me) AddPlaylistSongs() ResourceHandler { return m.addPlaylists }
+func (m me) AddPlaylistSongs() ResourceHandler { return m.addPlaylistSongs }
 
 func (m me) update(w http.ResponseWriter, r *http.Request) {
 	auth, ok := validate(w, r, m.Resource, pathCodeMeUpdate)
@@ -143,6 +143,8 @@ func (m me) updatePlaylist(w http.ResponseWriter, r *http.Request) {
 		writeRespErr(w, r, m.ResponseWriter, err)
 		return
 	}
+
+	playlist.Key = ""
 
 	marshalResponse(w, r, m.ResponseWriter, playlist)
 }
