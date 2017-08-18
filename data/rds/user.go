@@ -234,14 +234,14 @@ func (r userRepo) HasPlaylist(uk store.UserKey, pk store.PlaylistKey) error {
 		return progerr.PlaylistNotFound
 	}
 
-	data, err = conn.Do("EXISTS", "playlist:"+pk+":user")
+	data, err = conn.Do("GET", "playlist:"+pk+":user")
 
 	if err != nil {
 		return progerr.Internal(err)
 	}
 
-	if data.(int64) == 0 || store.UserKey(data.([]byte)[:]) != uk {
-		return progerr.PlaylistNotFound
+	if store.UserKey(data.([]byte)[:]) != uk {
+		return progerr.UserNotFound
 	}
 
 	return nil
