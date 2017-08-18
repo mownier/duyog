@@ -91,13 +91,13 @@ func (r userRepo) ChangePass(i store.ChangePassInput) error {
 	conn := r.pool.Get()
 	defer conn.Close()
 
-	data, err := conn.Do("EXISTS", "email:"+i.Email+":user")
+	data, err := conn.Do("GET", "email:"+i.Email+":user")
 
 	if err != nil {
 		return progerr.Internal(err)
 	}
 
-	if data.(int64) == 0 {
+	if len(data.([]byte)) == 0 {
 		return progerr.UserNotFound
 	}
 
