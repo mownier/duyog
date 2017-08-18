@@ -108,7 +108,7 @@ func (r albumRepo) Update(a store.Album) (store.Album, error) {
 	}
 
 	if a.Desc != "" && a.Desc != al.Desc {
-		_, err = conn.Do("HSET", "artist:"+a.Key, "description", a.Desc)
+		_, err = conn.Do("HSET", "album:"+a.Key, "description", a.Desc)
 
 		if err == nil {
 			tmp.Desc = a.Desc
@@ -152,6 +152,8 @@ func (r albumRepo) GetByKey(k store.AlbumKey) (store.Album, error) {
 	if err != nil {
 		return album, progerr.Internal(err)
 	}
+
+	album = al
 
 	return album, nil
 }
